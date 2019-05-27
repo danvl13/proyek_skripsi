@@ -29,6 +29,6 @@ class HomeController extends Controller
         // $categories = Kategori::all();
         // return view('home')->with('users', $users)->with('kat', $categories);
 
-        return redirect()->route('acara.index');
+        // return redirect()->route('acara.index');
     }
 }

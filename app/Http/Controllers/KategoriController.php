@@ -4,17 +4,30 @@ namespace App\Http\Controllers;
 
 use App\Kategori;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class KategoriController extends Controller
 {
+    public $module;
+
+    public function __construct()
+    {
+        $this->module = 'kategori';
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {
         
+        $list_kategori= Kategori::all();
+        return view('kategori.index')
+            ->with('module',$this->module)
+            ->with('list_kategori',$list_kategori);
     }
 
     /**
@@ -24,7 +37,8 @@ class KategoriController extends Controller
      */
     public function create()
     {
-        //
+         
+        return view('kategori.create')->with('module', $this->module);
     }
 
     /**
@@ -35,7 +49,15 @@ class KategoriController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'nama'=>'required|unique:kategoris,nama',
+        ]);
+
+            $kategori=new Kategori;
+            $kategori->nama=$request->input('nama');
+            $kategori->save();
+      
+        return redirect()->route('kategori.index');
     }
 
     /**
@@ -55,9 +77,10 @@ class KategoriController extends Controller
      * @param  \App\Kategori  $kategori
      * @return \Illuminate\Http\Response
      */
-    public function edit(Kategori $kategori)
+    public function edit($id)
     {
-        //
+        $kategori=Kategori::where('id',$id)->first();
+        return view('kategori.create')->with('kategori',$kategori)->with('module', $this->module);
     }
 
     /**
@@ -67,9 +90,16 @@ class KategoriController extends Controller
      * @param  \App\Kategori  $kategori
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Kategori $kategori)
+    public function update(Request $request)
     {
-        //
+        $this->validate($request, [
+            'nama'=>'required|unique:kategoris,nama',
+        ]);
+        
+        $kategori=Kategori::where('id', $request->input('id'))->first();
+        $kategori->nama=$request->input('nama');
+        $kategori->save(); 
+        return redirect()->route('kategori.index');
     }
 
     /**

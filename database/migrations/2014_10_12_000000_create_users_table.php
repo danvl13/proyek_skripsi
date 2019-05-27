@@ -19,7 +19,8 @@ class CreateUsersTable extends Migration
             $table->string('nama', 50);
             $table->string('prodi', 50);
             $table->integer('tahun');
-            $table->string('ttl',100)->nullable();
+            $table->string('ttl',50)->nullable();
+            $table->string('alamat',50)->default('');
             $table->string('agama',50)->nullable();
             $table->integer('jnskl')->nullable();
             $table->string('nohp',50)->nullable();
@@ -34,7 +35,7 @@ class CreateUsersTable extends Migration
             $table->text('kelemahan')->nullable();
             $table->string('username',50);
             $table->string('password',50);
-            $table->string('foto',100)->nullable();
+            $table->string('foto',50)->nullable();
             $table->integer('status');
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();

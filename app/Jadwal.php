@@ -15,4 +15,9 @@ class Jadwal extends Model
     {
         return $this->belongsTo('App\Acara', 'acara_id');
     }
+    public function divisiperacara()
+    {
+        return $this->belongsTo('App\Divisiperacara', 'divisi_id');
+    }
+    
 }

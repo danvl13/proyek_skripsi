@@ -12,8 +12,9 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call(DivisiTableSeeder::class);
-        // $path='users.sql';
-        // DB::unprepared(File_get_contents($path));
-        // $this->command->info('User table seeded');
+        $this->call(AcaraTableSeeder::class);
+        $this->call(DivisiperacaraTableSeeder::class);
+        $this->call(JadwalTableSeeder::class);
+        $this->call(KategoriTableSeeder::class);
     }
 }

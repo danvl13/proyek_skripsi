@@ -22,26 +22,17 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Nama</th>
-                                @if(Auth::user()->status == 3)
+                                <th>Nama Acara</th>
                                 <th>Status</th>
-                                <th>Approve</th>
-                                @endif
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($list_acara as $key => $acara)
                             <tr>
                                 <td> {{$key + 1}}</td>
-                                <td> <a href="{{ route('acara.view', ["id" => $acara->id]) }}">{{$acara->nama}} </a></td>
-                                @if(Auth::user()->status == 3)
-                                <td> <span class="label {{ $acara->status == 1? 'label-success' : 'label-warning' }}">{{ $acara->status == 1? 'Approved' : ($acara->tgl_mulai_acara < $today? 'Expired' :'Waiting for Approval') }}</span> </td>
-                                @if($acara->status==0 && $acara->tgl_mulai_acara > $today)
-                                <td><a href="{{route('acara.approve', ['id'=>$acara->id])}}"><button class='btn btn-success'>Approve</button></a></td>
-                                @else 
-                                <td></td>
-                                @endif
-                                @endif
+                                <td> <a href="{{ route('acara-diikuti.view', ["id" => $acara->id]) }}">{{$acara->nama}} </a></td>
+                                <td> <span class="label {{ $acara->jadwal[0]->status == 0?  'label-warning' : ($acara->jadwal[0]->status == 1? 'label-success' : 'label-danger') }}">{{ $acara->jadwal[0]->status == 0?  'Belum Diterima / Dtolak' : ($acara->jadwal[0]->status == 1? 'Diterima' : ' Ditolak' ) }}</span> </td>
+                                
                               </tr>
                             @endforeach
                         </tbody>

@@ -12,12 +12,13 @@
             <div class="row">
               <div class="col-xs-12">
                 <div class="box">
-                  
                   <!-- /.box-header -->
                   <div class="box-body">
                     <div class="container">
-                      <form class="form-horizontal" method="POST" action="{{ isset($acara)? route('acara-pengurus.edit') : route('acara-pengurus.create') }}">
-                        <h3>Data Acara</h3>
+                      <br>
+                      <h3 style="display:inline">Data Acara</h3>
+                      
+                      <form style="clear:both" class="form-horizontal" method="POST" action="#">
                         <div class="form-group">
                           <label class="col-lg-2 control-label">Nama Acara:</label>
                           <div class="col-lg-10">
@@ -60,7 +61,7 @@
                             <p class="form-control-static">{{ $acara->kategori->nama }}</p>
                           </div>
                         </div>
-                        
+                        @if(Auth::user()->status !=1 )
                         <h3>Divisi yang dibutuhkan </h3>
                         
                         <table class="table">
@@ -84,8 +85,12 @@
                             </tbody>
                         </table>
                         <br>
-                        <h3>Jadwal Wawancara</h3>
-                        <table class="table">
+                        <h3 style="display:inline">Jadwal Wawancara</h3>
+                        <div class ="pull-right">
+                        <a href="{{ route('acara-pengurus.hasil',['id'=> $acara->id]) }}"><button type="button" class='btn bg-navy' ><i class="fa fa-eye"></i>&nbsp; Hasil Wawancara</button></a>
+                        </div>
+                        <br><br>
+                        <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     
@@ -93,17 +98,41 @@
                                     <th>Jam</th>
                                     <th>Tempat</th>
                                     <th>Pewawancara</th>
+                                    <th>Pendaftar</th>
+                                    <th>Divisi Pendaftar</th>
+                                    <th>Diterima/ Ditolak</th>
                                 </tr>
                             </thead>
                             <tbody id="tbody-jadwal">
                           
-                              @foreach($acara->jadwal as $jadwal)
+                              @foreach($list_jadwal as $jadwal)
                               <tr>
-                                <td> <p class="form-control-static">{{ $jadwal->tgl_wawan }}</p></td>
-                               <td> <p class="form-control-static">{{ $jadwal->jam_wawan }}</p></td>
+                                <td><p class="form-control-static">{{ $jadwal->tgl_wawan }}</p></td>
+                                <td><p class="form-control-static">{{ $jadwal->jam_wawan }}</p></td>
                                 <td><p class="form-control-static">{{ $jadwal->tmpt_wawan }}</p></td>
                                 <td><p class="form-control-static">{{ $jadwal->pewawancara }}</p></td>
-                               
+                                @if($jadwal->nama)
+                                <td><a href="{{route('mahasiswa.view', ['id'=>$jadwal->user_id])}}"><p class="form-control-static">{{ $jadwal->nama? $jadwal->nama : '' }}</p></a></td>
+                                @else
+                                <td></td>
+                                @endif
+                                <td><p class="form-control-static">{{ $jadwal->divisi? $jadwal->divisi : '' }}</p></td>
+                                <td>
+                                  @if($jadwal->nama && $jadwal->status == 0)
+                                  <a href="{{ route('acara-pengurus.terima', ['acara' => $jadwal->acara_id,'id' => $jadwal->id]) }}">
+                                    <button type="button" class='btn btn-success' >Terima</button>
+                                    
+                                  </a>
+                                  <a href="{{ route('acara-pengurus.tolak', ['acara' => $acara->id,'id' => $jadwal->id]) }}">
+                                    
+                                    <button type="button" class='btn btn-danger' >Tolak</button>
+                                  </a>
+                                  @elseif($jadwal->nama && $jadwal->status == 1)
+                                  <span class="label label-success">Diterima</span>
+                                  @elseif($jadwal->nama && $jadwal->status == 2)
+                                  <span class="label label-danger">Ditolak</span>
+                                  @endif
+                                </td>
                               </tr>
                               @endforeach
                             
@@ -121,6 +150,7 @@
                           </div>
                         </div>
                       </div>
+                      @endif
                     </form>
 
                 </div>
@@ -137,6 +167,8 @@
 
 @push('scripts')
 <script>
-
+$('form').submit(function(e){
+  e.preventDefault();
+})
 </script>
 @endpush

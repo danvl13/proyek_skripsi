@@ -44,7 +44,7 @@
 
   <header class="main-header">
     <!-- Logo -->
-    <a href="index2.html" class="logo">
+    <a href="#" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>SP</b></span>
       <!-- logo for regular state and mobile devices -->
@@ -65,14 +65,17 @@
           <!-- User Account: style can be found in dropdown.less -->
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <img src="{{ asset('dist/img/user2-160x160.jpg') }}" class="user-image" alt="User Image">
+                @if(Auth::user()->foto)
+              <img src="{{ asset('img/user/'.Auth::user()->foto) }}" class="user-image" alt="User Image">
+              @endif
               <span class="hidden-xs">{{ Auth::user()->nama }}</span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
               <li class="user-header">
-                <img src="{{ asset('dist/img/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
-
+                  @if(Auth::user()->foto)
+                <img src="{{ asset('img/user/'.Auth::user()->foto) }}" class="img-circle" alt="User Image">
+                @endif
                 <p>
                 {{ Auth::user()->nama }}
                 </p>
@@ -80,7 +83,11 @@
         
               <!-- Menu Footer-->
               <li class="user-footer">
-                
+                @if(Auth::user()->status !=3)
+                <div class="pull-left" >
+                  <a href="{{ route('mahasiswa.profile') }}" class="btn btn-default btn-flat btn-info" style="color:white">Profile</a>
+                </div>
+                @endif
                 <div class="pull-right">
                   <a href="{{ route('logout-post') }}" class="btn btn-default btn-flat">Sign out</a>
                 </div>
@@ -100,17 +107,17 @@
       <!-- /.search form -->
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
-        <li><a href="{{ route('acara.index') }}"><i class="fa fa-circle-o"></i> <span>List Acara</span></a></li>
+        <li {{ isset($module) && $module == 'acara'? 'class=active' : isset($module) && $module == 'mahasiswa1'? 'class=active': ''  }}><a href="{{ route('acara.index') }}"><i class="fa fa-circle-o"></i> <span>List Acara</span></a></li>
         @if(Auth::user()->status == 1 || Auth::user()->status==2 )
-        <li><a href="javascript:void(0)"><i class="fa fa-circle-o"></i> <span>List Acara yang diikuti</span></a></li>
+        <li {{ isset($module) && $module == 'acaradiikuti'? 'class=active' : isset($module) && $module == 'mahasiswa2'? 'class=active': '' }}><a href="{{ route('acara-diikuti.index') }}"><i class="fa fa-circle-o"></i> <span>List Acara yang diikuti</span></a></li>
         @endif
         @if(Auth::user()->status==2 )
-        <li><a href="{{ route('acara-pengurus.index') }}"><i class="fa fa-circle-o"></i> <span>List Acara yang didaftarkan</span></a></li>
+        <li {{ isset($module) && $module == 'acaradidaftarkan'? 'class=active' : '' }}><a href="{{ route('acara-pengurus.index') }}"><i class="fa fa-circle-o"></i> <span>List Acara yang didaftarkan</span></a></li>
         @endif
         @if(Auth::user()->status == 3)
-        <li><a href="{{ route('mahasiswa.index') }}"><i class="fa fa-circle-o"></i> <span>List Mahasiswa</span></a></li>
-        <li><a href="javascript:void(0)"><i class="fa fa-circle-o"></i> <span>List Kategori</span></a></li>
-        <li><a href="javascript:void(0)"><i class="fa fa-circle-o"></i> <span>List Divisi</span></a></li>
+        <li {{ isset($module1) && $module1 == 'mahasiswa1'? 'class=active' : isset($module) && $module == 'mahasiswa2'? 'class=active' : '' }} ><a href="{{ route('mahasiswa.index') }}"><i class="fa fa-circle-o"></i> <span>List Mahasiswa</span></a></li>
+        <li {{ isset($module) && $module == 'kategori'? 'class=active' : '' }}><a href="{{ route('kategori.index') }}"><i class="fa fa-circle-o"></i> <span>List Kategori</span></a></li>
+        <li {{ isset($module) && $module == 'divisi'? 'class=active' : '' }}><a href="{{ route('divisi.index') }}"><i class="fa fa-circle-o"></i> <span>List Divisi</span></a></li>
         @endif
       </ul>
     </section>

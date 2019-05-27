@@ -18,6 +18,22 @@
                     <div class="container">
                       <form class="form-horizontal" method="POST" action="{{ isset($acara)? route('acara-pengurus.edit') : route('acara-pengurus.create') }}">
                         <h3>Data Acara</h3>
+                        @if(session()->has('errorMsg'))
+                        <div class= "alert alert-danger">
+                          <strong class="fa fa-exclamation-circle"></strong>&nbsp {{ session('errorMsg')}}
+                        </div>
+                        
+                        @endif
+                        @if($errors->any())
+                        <div class= "alert alert-danger">
+                          <h4><i class="icon fa fa-ban"></i>&nbsp Error</h4>
+                          <ul style="list-style-type:none;padding:0;">
+                            @foreach($errors->all() as $error)
+                            <li> {{ $error}}</li>
+                            @endforeach
+                          </ul>
+                        </div>
+                        @endif
                         <div class="form-group">
                           <label class="col-lg-2 control-label">Nama Acara</label>
                           <div class="col-lg-10">
@@ -130,9 +146,9 @@
                               @foreach($acara->jadwal as $jadwal)
                               <tr>
                                 <td> <input class="form-control tgl_wawan" min="{{ date('Y-m-d') }}" type="date" name="tgl_wawan[]" value="{{ $jadwal->tgl_wawan }}" required></td>
-                                <td> <input class="form-control" type="time" name="jam_wawan[]" value="{{ $jadwal->jam_wawan }}" required></td>
+                                <td> <input class="form-control jam_wawan" type="time" name="jam_wawan[]" value="{{ $jadwal->jam_wawan }}" required></td>
                                 <td> <input class="form-control" type="text" name="tmpt_wawan[]" value="{{ $jadwal->tmpt_wawan }}" required></td>
-                                <td> <input class="form-control" type="text" name="pewawancara[]" value="{{ $jadwal->pewawancara }}" required></td>
+                                <td> <input class="form-control pewawancara" type="text" name="pewawancara[]" value="{{ $jadwal->pewawancara }}" required></td>
                                 <td>
                                   <input type="hidden" class="tgl_wawan_terbesar" name="tgl_wawan_terbesar[]" value="{{ $jadwal->tgl_wawan_terbesar }}">
                                     <input type="hidden" name="id_jadwal[]" value="{{ $jadwal->id }}">
@@ -143,9 +159,9 @@
                             @else
                               <tr>
                                   <td> <input class="form-control tgl_wawan" min="{{ date('Y-m-d') }}" type="date" name="tgl_wawan[]" required></td>
-                                  <td> <input class="form-control" type="time" name="jam_wawan[]" required></td>
+                                  <td> <input class="form-control jam_wawan" type="time" name="jam_wawan[]" required></td>
                                   <td> <input class="form-control" type="text" name="tmpt_wawan[]" required></td>
-                                  <td> <input class="form-control" type="text" name="pewawancara[]" required></td>
+                                  <td> <input class="form-control pewawancara" type="text" name="pewawancara[]" required></td>
                                   <td>
                                       <input type="hidden" class="tgl_wawan_terbesar" name="tgl_wawan_terbesar[]" value="0">
                                       <button type="button" class="btn btn-danger hapus-button"><i class="fa fa-trash"></i></button>
@@ -214,9 +230,9 @@ function tambah_jadwal(){
   $("#tbody-jadwal").append(`
   <tr>
       <td> <input class="form-control tgl_wawan" min="{{ date('Y-m-d') }}" type="date" name="tgl_wawan[]" required></td>
-      <td> <input class="form-control" type="time" name="jam_wawan[]" required></td>
+      <td> <input class="form-control jam_wawan" type="time" name="jam_wawan[]" required></td>
       <td> <input class="form-control" type="text" name="tmpt_wawan[]" required></td>
-      <td> <input class="form-control" type="text" name="pewawancara[]" required></td>
+      <td> <input class="form-control pewawancara" type="text" name="pewawancara[]" required></td>
       <td>
           <input type="hidden" name="id_jadwal[]" >
           <input type="hidden" class="tgl_wawan_terbesar" name="tgl_wawan_terbesar[]" value="0">
@@ -236,11 +252,12 @@ function submit_form(e){
   divisi=[];
   duplicateFlag = false;
   $('.divisi_id').each(function(){
-    // console.log($(this).val());
+    console.log($(this).val());
     if(divisi.find(e => e == $(this).val() )){
       duplicateFlag = true;
     }
     divisi.push($(this).val())
+    // console.log(duplicateFlag);
   })
   // console.log(divisi)
   // return false;
@@ -256,6 +273,24 @@ function submit_form(e){
     }
 
   })
+  duplicatePewawancara = false;
+  tanggal = $(".tgl_wawan").toArray();
+  jam = $(".jam_wawan").toArray();
+  pewawancara = $(".pewawancara").toArray();
+  for ( var i = 0; i < tanggal.length; i++ ) {
+    
+    for ( var j = 0; j < tanggal.length; j++ ) {
+      if(i != j){
+        if((tanggal[i].value==tanggal[j].value) && (jam[i].value==jam[j].value) && (pewawancara[i].value==pewawancara[j].value) ){
+          duplicatePewawancara = true;
+        }
+      }
+    }
+  }
+  if(duplicatePewawancara){
+    alert("tanggal, jam, pewawancara tidak boleh sama");
+    errorFlag =true;
+  }
   document.getElementsByClassName('tgl_wawan_terbesar')[index_terbesar].value = 1;
   
   // cek tgl mulai acara dgn tgl selesai acara

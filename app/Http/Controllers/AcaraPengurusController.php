@@ -30,7 +30,10 @@ class AcaraPengurusController extends Controller
 
     public function store(Request $request)
     {
-        dd($request);
+        $this->validate($request, [
+            'nama'=>'required|unique:acaras,nama',
+        ]);
+
         DB::transaction(function() use($request){
             $acara=new Acara;
             $acara->nama=$request->input('nama');
@@ -63,16 +66,27 @@ class AcaraPengurusController extends Controller
             }
         });
         
-
+        $request->session()->flash('successMsg','Data berhasil ditambahkan');
         return redirect()->route('acara-pengurus.index');
     }
 
     public function update(Request $request)
     {
-        // dd($request);
-        DB::transaction(function() use($request){
+        $this->validate($request, [
+            'nama'=>'required',
+        ]);
+
+        $error = DB::transaction(function() use($request){
             $acara=Acara::where('id', $request->input('id'))->first();
-            $acara->nama=$request->input('nama');
+            if($acara->nama != $request->input('nama')){
+                $acaraName = Acara::where('nama', $request->input('nama'))->count();
+                if($acaraName == 0){
+                    $acara->nama=$request->input('nama');
+                } else {
+                    return 'Nama acara sudah dipakai';
+                }
+                
+            }
             $acara->tgl_mulai_acara=$request->input('tgl_mulai_acara');
             $acara->tgl_selesai_acara=$request->input('tgl_selesai_acara');
             $acara->tmpt_acara=$request->input('tempat_acara');
@@ -147,23 +161,65 @@ class AcaraPengurusController extends Controller
             // }
         
         });
-
-        return redirect()->route('acara-pengurus.index');
+        if($error){
+            return back()->withInput()->with('errorMsg', $error);
+        } else {
+            return redirect()->route('acara-pengurus.index');
+        }
+        
     }
     public function delete(Request $request){
         $id = $request->input('id');
-        $divisi=Divisiperacara::where('acara_id', $id)->first();
-        $divisi->delete();
-        $jadwal=Jadwal::where('acara_id',$id)->first();
-        $jadwal->delete();
         $acara = Acara::findOrFail($id);
-        $acara->delete();
+        if($acara->status == 0){
+            DB::transaction(function() use($id){
+                $divisi=Divisiperacara::where('acara_id', $id)->first();
+                $divisi->delete();
+                $jadwal=Jadwal::where('acara_id',$id)->first();
+                $jadwal->delete();
+                $acara->delete();
+            });
+        }
         return ['status'=>'ok'];
     }
     public function view($id){
-        $acara=Acara::where('id',$id)->first();
+        $acara=Acara::with('jadwal.divisiperacara.divisi')->where('id',$id)->first();
+        // dd($acara->jadwal);
+        $list_jadwal = DB::table('jadwals')
+            ->select('jadwals.tgl_wawan','jadwals.id','jadwals.acara_id', 'jadwals.jam_wawan', 'jadwals.tmpt_wawan', 'jadwals.pewawancara','jadwals.status','users.nama','users.id as user_id','users.tahun','divisis.nama AS divisi')
+            ->leftjoin('users', 'jadwals.user_id', '=', 'users.id')
+            ->leftjoin('divisiperacaras', 'jadwals.divisi_id', '=', 'divisiperacaras.id')
+            ->leftjoin('divisis', 'divisiperacaras.divisi_id', '=', 'divisis.id')
+            ->where('jadwals.acara_id', $id)
+            ->orderBy('users.tahun')
+            ->get();
+        // dd($list_jadwal);
         $list_kategori= Kategori::all();
         $list_divisi= Divisi::all();
-        return view('acara-pengurus.view')->with('acara',$acara)->with('list_kategori',$list_kategori)->with('list_divisi',$list_divisi);
+        return view('acara-pengurus.view')
+            ->with('acara',$acara)
+            ->with('list_kategori',$list_kategori)
+            ->with('list_divisi',$list_divisi)
+            ->with('list_jadwal',$list_jadwal) ;
+    }
+    public function hasil($id){
+        $list_terima=Jadwal::where('acara_id',$id)->where('status',1)->get();
+        $list_tolak=Jadwal::where('acara_id',$id)->where('status',2)->get();
+        return view('acara-pengurus.hasil')->with('list_terima',$list_terima)->with('list_tolak',$list_tolak);
+    }
+    public function terima($acara, $id)
+    {
+        
+        $jadwal=Jadwal::where('id',$id)->first();
+        $jadwal->status=1;
+        $jadwal->save();
+        return redirect()->route('acara-pengurus.view', ['id' => $acara]);
+    }
+    public function tolak($acara, $id)
+    {
+        $jadwal=Jadwal::where('id',$id)->first();
+        $jadwal->status=2;
+        $jadwal->save();
+        return redirect()->route('acara-pengurus.view', ['id' => $acara]);
     }
 }

@@ -15,7 +15,7 @@ class CreateAcarasTable extends Migration
     {
         Schema::create('acaras', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('nama',50)->nullable();
+            $table->string('nama',50)->unique()->nullable();
             $table->date('tgl_mulai_acara')->nullable();
             $table->date('tgl_selesai_acara')->nullable();
             $table->text('tmpt_acara')->nullable();

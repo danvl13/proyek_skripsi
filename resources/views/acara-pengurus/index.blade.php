@@ -24,13 +24,22 @@
                   </div>
                   <!-- /.box-header -->
                   <div class="box-body">
-
+                    @if(session()->has('successMsg'))
+                    <div class= "alert alert-success">
+                        <strong class="fa fa-check-circle"></strong>&nbsp {{ session('successMsg')}}
+                    </div>
+                    @endif
+                    @if(session()->has('errorMsg'))
+                    <div class= "alert alert-danger">
+                        <strong class="fa fa-exclamation-circle"></strong>&nbsp {{ session('errorMsg')}}
+                    </div>
+                    @endif
                     <table class="table">
                         <thead>
                             <tr>
                                 <th>#</th>
                                 <th>Nama</th>
-                                <th>Delete</th>
+                                <th>Edit/Delete</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -39,8 +48,10 @@
                                 <td> {{$key + 1}}</td>
                                 <td> <a href="{{ route('acara-pengurus.view', ['id' => $acara->id ])}}">{{$acara->nama}} </a></td>
                                 <td>
+                                    @if($acara->status==0)
                                     <a href="{{ route('acara-pengurus.edit-page', ["id" => $acara->id]) }}"><button class='btn btn-warning'>Edit</button></a>
                                     <button class='btn btn-danger delete-button' data-id="{{$acara->id}}">Delete</button>
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach
@@ -67,7 +78,7 @@ function deleteAcara(id){
     return $.ajax({
         url:"{{ route('acara-pengurus.delete') }}",
         type:"post",
-        data:{'id':id,'_token':'{{csrf_token() }}'}
+        data:{'id':id, '_token':'{{csrf_token() }}'}
     })
 }
 

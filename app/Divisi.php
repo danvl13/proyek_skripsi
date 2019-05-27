@@ -10,4 +10,8 @@ class Divisi extends Model
     {
         return $this->hasMany('App\Divisiperacara');
     }
+    public function jadwak()
+    {
+        return $this->hasMany('App\Jadwal');
+    }
 }
