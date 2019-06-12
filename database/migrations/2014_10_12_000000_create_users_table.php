@@ -20,13 +20,13 @@ class CreateUsersTable extends Migration
             $table->string('prodi', 50);
             $table->integer('tahun');
             $table->string('ttl',50)->nullable();
-            $table->string('alamat',50)->default('');
+            $table->string('alamat',50)->default('')->nullable();
             $table->string('agama',50)->nullable();
             $table->integer('jnskl')->nullable();
             $table->string('nohp',50)->nullable();
             $table->string('line',50)->nullable();
             $table->string('email',50)->nullable();
-            $table->decimal('ipk',8,2)->nullable();
+            $table->decimal('ipk',8,2)->default(0);
             $table->decimal('jumkp',8,2)->nullable();
             $table->string('hobi',50)->nullable();
             $table->text('motivasi')->nullable();

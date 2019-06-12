@@ -37,37 +37,37 @@
                         <div class="form-group">
                           <label class="col-lg-2 control-label">Nama Acara</label>
                           <div class="col-lg-10">
-                            <input class="form-control" type="text" name="nama" value="{{ isset($acara)? $acara->nama : '' }}">
+                            <input  required class="form-control" type="text" name="nama" value="{{ isset($acara)? $acara->nama : '' }}">
                           </div>
                         </div>
                         <div class="form-group">
                           <label class="col-lg-2 control-label">Tanggal Mulai Acara</label>
                           <div class="col-lg-10">
-                            <input id="tgl_mulai_acara" min="{{ date('Y-m-d') }}" class="form-control" type="date" name="tgl_mulai_acara" value="{{ isset($acara)? $acara->tgl_mulai_acara : '' }}">
+                            <input required id="tgl_mulai_acara" min="{{ date('Y-m-d') }}" class="form-control" type="date" name="tgl_mulai_acara" value="{{ isset($acara)? $acara->tgl_mulai_acara : '' }}">
                           </div>
                         </div>
                         <div class="form-group">
                           <label class="col-lg-2 control-label">Tanggal Selesai Acara</label>
                           <div class="col-lg-10">
-                            <input id="tgl_selesai_acara" min="{{ date('Y-m-d') }}" class="form-control" type="date" name="tgl_selesai_acara" value="{{ isset($acara)? $acara->tgl_selesai_acara : '' }}">
+                            <input required id="tgl_selesai_acara" min="{{ date('Y-m-d') }}" class="form-control" type="date" name="tgl_selesai_acara" value="{{ isset($acara)? $acara->tgl_selesai_acara : '' }}">
                           </div>
                         </div>
                         <div class="form-group">
                           <label class="col-lg-2 control-label">Tempat Acara</label>
                           <div class="col-lg-10">
-                            <input class="form-control" type="text" name="tempat_acara"  value="{{ isset($acara)? $acara->tmpt_acara : '' }}">
+                            <input required class="form-control" type="text" name="tempat_acara"  value="{{ isset($acara)? $acara->tmpt_acara : '' }}">
                           </div>
                         </div>
                         <div class="form-group">
                           <label class="col-lg-2 control-label">Keterangan</label>
                           <div class="col-lg-10">
-                            <input class="form-control" type="text" name="keterangan"  value="{{ isset($acara)? $acara->keterangan : '' }}">
+                            <input required class="form-control" type="text" name="keterangan"  value="{{ isset($acara)? $acara->keterangan : '' }}">
                           </div>
                         </div>
                         <div class="form-group">
                           <label class="col-lg-2 control-label">IPK Minimum</label>
                           <div class="col-lg-10">
-                            <input class="form-control" type="number" step="0.01" min="0" max="4" name="ipkmin"  value="{{ isset($acara)? $acara->ipkmin : '' }}">
+                            <input required class="form-control" type="number" step="0.01" min="0" max="4" name="ipkmin"  value="{{ isset($acara)? $acara->ipkmin : '' }}">
                           </div>
                         </div>
                         <div class="form-group">

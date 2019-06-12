@@ -137,7 +137,7 @@
                             <div class="form-group">
                               <label class="col-lg-2 control-label">Status :</label>
                               <div class="col-lg-10">
-                                <p class="form-control-static" >{{$user->status== 1? 'mahasiswa' : 'Pengerus Acara'}}</p>
+                                <p class="form-control-static" >{{$user->status== 1? 'mahasiswa' : 'Pengurus Acara'}}</p>
                               </div>
                             </div>
                             @if($list_acara->count() > 0)

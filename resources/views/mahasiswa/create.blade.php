@@ -38,14 +38,14 @@
                                   <input type="text" name="nrp" class="form-control" >
                               </div>
                             </div>
-                            @endif
+                            
                             <div class="form-group">
                               <label class="col-lg-2 control-label">Nama :</label>
                               <div class="col-lg-10">
                                 <input type="text" name="nama" class="form-control" value="{{ isset($user)? $user->nama : '' }}">
                               </div>
                             </div>
-                            @if(!isset($user))
+                            
                             <div class="form-group">
                               <label class="col-lg-2 control-label">Program Studi :</label>
                               <div class="col-lg-10">
@@ -77,7 +77,7 @@
                               <div class="col-lg-10">
                                  <select name="jnskl" class="form-control">
                                    <option value="0" {{ isset($user) && $user->jnskl ==0 ?'selected':'' }}>Perempuan</option>
-                                   <option value="1" {{ isset($user) && $user->jnskl ==0 ?'selected':'' }}>Laki-laki</option>
+                                   <option value="1" {{ isset($user) && $user->jnskl ==1 ?'selected':'' }}>Laki-laki</option>
                                  </select>
                               </div>
                             </div>
@@ -99,10 +99,11 @@
                                   <input type="email" name="email" class="form-control" value="{{ isset($user)? $user->email : '' }}">
                               </div>
                             </div>
+                            @if (Auth::user()->status!=3)
                             <div class="form-group">
                               <label class="col-lg-2 control-label">IPK :</label>
                               <div class="col-lg-10">
-                                  <input type="number" step="0.01" name="ipk" class="form-control" autocomplete="off" value="{{ isset($user)? $user->ipk : '' }}">
+                                  <input type="number" step="0.01" min="0" max="4" name="ipk" class="form-control" autocomplete="off" value="{{ isset($user)? $user->ipk : '' }}">
                               </div>
                             </div>
                             <div class="form-group">
@@ -146,7 +147,8 @@
                               <div class="col-lg-10">
                                   <input type="file" name="foto" class="form-control" >
                               </div>
-                            </div>    
+                            </div>
+                            @endif    
                             <br>
                             @csrf
                             <div class="form-group">

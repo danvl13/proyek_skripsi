@@ -22,7 +22,7 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Nama</th>
+                                <th>Nama Acara</th>
                                 @if(Auth::user()->status == 3)
                                 <th>Status</th>
                                 <th>Approve</th>

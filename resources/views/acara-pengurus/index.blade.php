@@ -3,7 +3,7 @@
 @section('content')
 <section class="content-header">
     <h1>
-        List Acara 
+        List Acara yang didaftarkan 
     </h1>
     <ol class="breadcrumb">
         
@@ -38,7 +38,7 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Nama</th>
+                                <th>Nama Acara</th>
                                 <th>Edit/Delete</th>
                             </tr>
                         </thead>

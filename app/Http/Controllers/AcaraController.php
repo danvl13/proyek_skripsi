@@ -27,16 +27,14 @@ class AcaraController extends Controller
     public function index()
     {
         if(Auth::user()->status==3){
-            $list_acara= Acara::/*whereHas('jadwal', function($q){
-                $q->where('tgl_wawan_terbesar', 1)->where('tgl_wawan', '>=', Carbon::today());
-            })->*/get();
+            $list_acara= Acara::get();
         }else{
             $list_acara= Acara::with(['jadwal' => function($q){
                 $q->where('user_id', Auth::user()->id);
             }])->whereDoesntHave('jadwal', function($q){
                 $q->where('user_id', Auth::user()->id);
             })->where('status', 1)->where('user_id','!=',Auth::user()->id)->whereHas('jadwal', function($q){
-                $q->where('tgl_wawan_terbesar', 1)->where('tgl_wawan', '>=', Carbon::today());
+                $q->where('tgl_wawan_terbesar', 1)->where('tgl_wawan', '>', Carbon::today());
             })->where('ipkmin','<=',Auth::user()->ipk)
             ->whereHas('jadwal', function($q){
                 $q->where('user_id',null);

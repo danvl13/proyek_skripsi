@@ -107,17 +107,24 @@
       <!-- /.search form -->
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
-        <li {{ isset($module) && $module == 'acara'? 'class=active' : isset($module) && $module == 'mahasiswa1'? 'class=active': ''  }}><a href="{{ route('acara.index') }}"><i class="fa fa-circle-o"></i> <span>List Acara</span></a></li>
+        <li {{ isset($module) && $module == 'acara'? 'class=active' :  ''  }}>
+          <a href="{{ route('acara.index') }}">
+            <i class="fa fa-circle-o"></i> <span>List Acara</span></a></li>
         @if(Auth::user()->status == 1 || Auth::user()->status==2 )
-        <li {{ isset($module) && $module == 'acaradiikuti'? 'class=active' : isset($module) && $module == 'mahasiswa2'? 'class=active': '' }}><a href="{{ route('acara-diikuti.index') }}"><i class="fa fa-circle-o"></i> <span>List Acara yang diikuti</span></a></li>
+        <li {{ isset($module) && $module == 'acaradiikuti'? 'class=active' :'' }}>
+           <a href="{{ route('acara-diikuti.index') }}"><i class="fa fa-circle-o"></i> <span>List Acara yang diikuti</span></a></li>
         @endif
         @if(Auth::user()->status==2 )
-        <li {{ isset($module) && $module == 'acaradidaftarkan'? 'class=active' : '' }}><a href="{{ route('acara-pengurus.index') }}"><i class="fa fa-circle-o"></i> <span>List Acara yang didaftarkan</span></a></li>
+        <li {{ isset($module) && $module == 'acaradidaftarkan'? 'class=active' : '' }}>
+           <a href="{{ route('acara-pengurus.index') }}"><i class="fa fa-circle-o"></i> <span>List Acara yang didaftarkan</span></a></li>
         @endif
         @if(Auth::user()->status == 3)
-        <li {{ isset($module1) && $module1 == 'mahasiswa1'? 'class=active' : isset($module) && $module == 'mahasiswa2'? 'class=active' : '' }} ><a href="{{ route('mahasiswa.index') }}"><i class="fa fa-circle-o"></i> <span>List Mahasiswa</span></a></li>
-        <li {{ isset($module) && $module == 'kategori'? 'class=active' : '' }}><a href="{{ route('kategori.index') }}"><i class="fa fa-circle-o"></i> <span>List Kategori</span></a></li>
-        <li {{ isset($module) && $module == 'divisi'? 'class=active' : '' }}><a href="{{ route('divisi.index') }}"><i class="fa fa-circle-o"></i> <span>List Divisi</span></a></li>
+        <li {{ isset($module) && $module == 'mahasiswa'? 'class=active' :  '' }} >
+          <a href="{{ route('mahasiswa.index') }}"><i class="fa fa-circle-o"></i> <span>List Mahasiswa</span></a></li>
+        <li {{ isset($module) && $module == 'kategori'? 'class=active' : '' }}>
+          <a href="{{ route('kategori.index') }}"><i class="fa fa-circle-o"></i> <span>List Kategori</span></a></li>
+        <li {{ isset($module) && $module == 'divisi'? 'class=active' : '' }}>
+          <a href="{{ route('divisi.index') }}"><i class="fa fa-circle-o"></i> <span>List Divisi</span></a></li>
         @endif
       </ul>
     </section>

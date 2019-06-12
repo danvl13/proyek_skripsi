@@ -73,6 +73,30 @@ class JadwalTableSeeder extends Seeder
                 'acara_id' => 1,
                 'created_at'=> Carbon::now()->format('Y-m-d H:i:s'),
             ],
+            [
+                'tgl_wawan' => '2017-12-08',
+                'jam_wawan' => '10:00:00',
+                'tmpt_wawan' => 'Selasar B',
+                'pewawancara' => 'Tati',
+                'status' => 1,
+                'tgl_wawan_terbesar' => 0,
+                'user_id' => 2,
+                'divisi_id' => 12,
+                'acara_id' => 4,
+                'created_at'=> Carbon::now()->format('Y-m-d H:i:s'),
+            ],
+            [
+                'tgl_wawan' => '2017-12-09',
+                'jam_wawan' => '10:00:00',
+                'tmpt_wawan' => 'Selasar B',
+                'pewawancara' => 'Garett',
+                'status' => 1,
+                'tgl_wawan_terbesar' => 1,
+                'user_id' => 3,
+                'divisi_id' => 13,
+                'acara_id' => 4,
+                'created_at'=> Carbon::now()->format('Y-m-d H:i:s'),
+            ],
         ]);
     }
 }

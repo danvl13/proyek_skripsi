@@ -9,11 +9,10 @@ use Carbon\Carbon;
 class MahasiswaController extends Controller
 {
     public $module;
-    public $module1;
+
     public function __construct()
     {
-        $this->module = 'mahasiswa2';
-        $this->module1 = 'mahasiswa1';
+        $this->module = 'mahasiswa';
     }
 
     public function index(){
@@ -36,7 +35,7 @@ class MahasiswaController extends Controller
     {
         $this->validate($request, [
             'nrp'=>'required|unique:users,nrp',
-            'foto'=>'required|image'
+            'foto'=>'image'
         ]);
 
         $user = new User;
@@ -45,12 +44,13 @@ class MahasiswaController extends Controller
         $user->prodi = $request->input('prodi');
         $user->tahun = (int) Carbon::now()->format('Y');
         $user->ttl = $request->input('ttl');
+        $user->alamat = $request->input('alamat');
         $user->agama = $request->input('agama');
         $user->jnskl = $request->input('jnskl');
         $user->nohp = $request->input('nohp');
         $user->line = $request->input('line');
         $user->email = $request->input('email');
-        $user->ipk = $request->input('ipk');
+        $user->ipk = 0;
         $user->jumkp = $request->input('jumkp');
         $user->hobi = $request->input('hobi');
         $user->motivasi = $request->input('motivasi');
@@ -69,7 +69,7 @@ class MahasiswaController extends Controller
         }
         $user->save();
         
-        return view('mahasiswa.index');
+        return redirect()->route('mahasiswa.index');
     }
 
     public function gantiPassword(Request $request){
@@ -85,10 +85,7 @@ class MahasiswaController extends Controller
         $this->validate($request, [
             'foto'=>'image'
         ]);
-        // dd($request);
         $user =User::findOrFail($request->input('id'));
-        $user->nama = $request->input('nama');
-        $user->tahun = (int) Carbon::now()->format('Y');
         $user->ttl = $request->input('ttl');
         $user->alamat = $request->input('alamat');
         $user->agama = $request->input('agama');
@@ -132,7 +129,7 @@ class MahasiswaController extends Controller
     public function view($id)
     {
         $user=User::where('id',$id)->first();
-        return view('mahasiswa.view')->with('user',$user)->with('module',$this->module1)->with('module',$this->module);
+        return view('mahasiswa.view')->with('user',$user)->with('module',$this->module);
     }
     public function ganti($id)
     {

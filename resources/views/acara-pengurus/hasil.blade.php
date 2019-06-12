@@ -35,6 +35,7 @@
                               @endforeach
                             </tbody>
                         </table>
+                        
                         <h3 style="display:inline">Hasil Ditolak</h3>
                         <table class="table table-striped table-bordered">
                             <thead>

@@ -31,7 +31,7 @@
                         <div class="form-group">
                           <label class="col-lg-2 control-label">Nama Divisi</label>
                           <div class="col-lg-10">
-                            <input class="form-control" type="text" name="nama" value="{{ isset($divisi)? $divisi->nama : '' }}">
+                            <input required class="form-control" type="text" name="nama" value="{{ isset($divisi)? $divisi->nama : '' }}">
                           </div>
                         </div>
                         @csrf

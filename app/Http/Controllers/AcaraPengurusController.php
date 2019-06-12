@@ -8,16 +8,22 @@ use Illuminate\Support\Facades\DB;
 
 class AcaraPengurusController extends Controller
 {
+    public $module;
+
+    public function __construct()
+    {
+       $this->module = 'acaradidaftarkan';
+    }
     public function index(){
         $list_acara= Acara::where('user_id',Auth::user()->id)->get();
-        return view('acara-pengurus.index')->with('list_acara',$list_acara);
+        return view('acara-pengurus.index')->with('list_acara',$list_acara)->with('module',$this->module);
     }
 
     public function create()
     {
         $list_kategori= Kategori::all();
         $list_divisi= Divisi::all();
-        return view('acara-pengurus.create')->with('list_kategori',$list_kategori)->with('list_divisi',$list_divisi);
+        return view('acara-pengurus.create')->with('list_kategori',$list_kategori)->with('module',$this->module)->with('list_divisi',$list_divisi);
     }
 
     public function edit($id)
@@ -25,7 +31,7 @@ class AcaraPengurusController extends Controller
         $acara=Acara::where('id',$id)->first();
         $list_kategori= Kategori::all();
         $list_divisi= Divisi::all();
-        return view('acara-pengurus.create')->with('acara',$acara)->with('list_kategori',$list_kategori)->with('list_divisi',$list_divisi);
+        return view('acara-pengurus.create')->with('acara',$acara)->with('module',$this->module)->with('list_kategori',$list_kategori)->with('list_divisi',$list_divisi);
     }
 
     public function store(Request $request)
@@ -198,6 +204,7 @@ class AcaraPengurusController extends Controller
         $list_divisi= Divisi::all();
         return view('acara-pengurus.view')
             ->with('acara',$acara)
+            ->with('module',$this->module)
             ->with('list_kategori',$list_kategori)
             ->with('list_divisi',$list_divisi)
             ->with('list_jadwal',$list_jadwal) ;
@@ -205,7 +212,7 @@ class AcaraPengurusController extends Controller
     public function hasil($id){
         $list_terima=Jadwal::where('acara_id',$id)->where('status',1)->get();
         $list_tolak=Jadwal::where('acara_id',$id)->where('status',2)->get();
-        return view('acara-pengurus.hasil')->with('list_terima',$list_terima)->with('list_tolak',$list_tolak);
+        return view('acara-pengurus.hasil')->with('list_terima',$list_terima)->with('module',$this->module)->with('list_tolak',$list_tolak);
     }
     public function terima($acara, $id)
     {

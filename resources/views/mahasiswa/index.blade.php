@@ -30,12 +30,13 @@
                             <tr>
                                 <th>#</th>
                                 <th>NRP</th>
-                                <th>Nama</th>
-                                <th>Ganti</th>
+                                <th>Nama Mahasiswa</th>
+                                <th>Ganti Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($list_mahasiswa as $key => $user)
+                            @if ($user->status!=3)
                             <tr>
                                 <td> {{$key + 1}}</td>
                                 <td> {{$user->nrp}} </td>
@@ -46,6 +47,7 @@
                                 </td>
                                 @else
                                 <td></td>
+                                @endif
                                 @endif
                             @endforeach
                         </tbody>
