@@ -38,6 +38,12 @@
                           </div>
                         </div>
                         <div class="form-group">
+                          <label class="col-lg-2 control-label">Tanggal Batas Pendaftaran:</label>
+                          <div class="col-lg-10">
+                            <p class="form-control-static" >{{$acara->tgl_batas_ubah}}</p>
+                          </div>
+                        </div>
+                        <div class="form-group">
                           <label class="col-lg-2 control-label">Tempat Acara:</label>
                           <div class="col-lg-10">
                             <p class="form-control-static" >{{$acara->tmpt_acara }}</p>
@@ -87,9 +93,14 @@
                         <br>
                         <h3 style="display:inline">Jadwal Wawancara</h3>
                         <div class ="pull-right">
-                        <a href="{{ route('acara-pengurus.hasil',['id'=> $acara->id]) }}"><button type="button" class='btn bg-navy' ><i class="fa fa-eye"></i>&nbsp; Hasil Wawancara</button></a>
+                          <a href="{{ route('acara-pengurus.hasil',['id'=> $acara->id]) }}"><button type="button" class='btn bg-navy' ><i class="fa fa-eye"></i>&nbsp; Hasil Wawancara</button></a>
                         </div>
                         <br><br>
+                        @if(session()->has('errorMsg'))
+                          <div class= "alert alert-danger">
+                            <strong class="fa fa-exclamation-circle"></strong>&nbsp {{ session('errorMsg')}}
+                          </div>
+                        @endif
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
@@ -99,13 +110,14 @@
                                     <th>Tempat</th>
                                     <th>Pewawancara</th>
                                     <th>Pendaftar</th>
+                                    <th>Rating</th>
                                     <th>Divisi Pendaftar</th>
                                     <th>Diterima/ Ditolak</th>
                                 </tr>
                             </thead>
                             <tbody id="tbody-jadwal">
                           
-                              @foreach($list_jadwal as $jadwal)
+                              @foreach($list_jadwal as $key => $jadwal)
                               <tr>
                                 <td><p class="form-control-static">{{ $jadwal->tgl_wawan }}</p></td>
                                 <td><p class="form-control-static">{{ $jadwal->jam_wawan }}</p></td>
@@ -113,7 +125,9 @@
                                 <td><p class="form-control-static">{{ $jadwal->pewawancara }}</p></td>
                                 @if($jadwal->nama)
                                 <td><a href="{{route('mahasiswa.view', ['id'=>$jadwal->user_id])}}"><p class="form-control-static">{{ $jadwal->nama? $jadwal->nama : '' }}</p></a></td>
+                              <td><p class="form-control-static">{{ (($jadwal->ipk/4*0.4) + (($tahun - $jadwal->tahun)/6*0.6)) *100 }}</p></td>
                                 @else
+                                <td></td>
                                 <td></td>
                                 @endif
                                 <td><p class="form-control-static">{{ $jadwal->divisi? $jadwal->divisi : '' }}</p></td>

@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 use Auth;
 use App\{Acara, Kategori, Divisi, Divisiperacara, Jadwal};
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\{DB, Session};
+use Carbon\Carbon;
 
 class AcaraPengurusController extends Controller
 {
@@ -16,7 +17,8 @@ class AcaraPengurusController extends Controller
     }
     public function index(){
         $list_acara= Acara::where('user_id',Auth::user()->id)->get();
-        return view('acara-pengurus.index')->with('list_acara',$list_acara)->with('module',$this->module);
+        $today=Carbon::today();
+        return view('acara-pengurus.index')->with('list_acara',$list_acara)->with('today',$today)->with('module',$this->module);
     }
 
     public function create()
@@ -45,6 +47,7 @@ class AcaraPengurusController extends Controller
             $acara->nama=$request->input('nama');
             $acara->tgl_mulai_acara=$request->input('tgl_mulai_acara');
             $acara->tgl_selesai_acara=$request->input('tgl_selesai_acara');
+            $acara->tgl_batas_ubah=$request->input('tgl_batas_ubah');
             $acara->tmpt_acara=$request->input('tempat_acara');
             $acara->keterangan=$request->input('keterangan');
             $acara->ipkmin=$request->input('ipkmin');
@@ -95,6 +98,7 @@ class AcaraPengurusController extends Controller
             }
             $acara->tgl_mulai_acara=$request->input('tgl_mulai_acara');
             $acara->tgl_selesai_acara=$request->input('tgl_selesai_acara');
+            $acara->tgl_batas_ubah=$request->input('tgl_batas_ubah');
             $acara->tmpt_acara=$request->input('tempat_acara');
             $acara->keterangan=$request->input('keterangan');
             $acara->ipkmin=$request->input('ipkmin');
@@ -174,25 +178,25 @@ class AcaraPengurusController extends Controller
         }
         
     }
-    public function delete(Request $request){
-        $id = $request->input('id');
-        $acara = Acara::findOrFail($id);
-        if($acara->status == 0){
-            DB::transaction(function() use($id){
-                $divisi=Divisiperacara::where('acara_id', $id)->first();
-                $divisi->delete();
-                $jadwal=Jadwal::where('acara_id',$id)->first();
-                $jadwal->delete();
-                $acara->delete();
-            });
-        }
-        return ['status'=>'ok'];
-    }
+    // public function delete(Request $request){
+    //     $id = $request->input('id');
+    //     $acara = Acara::findOrFail($id);
+    //     if($acara->status == 0){
+    //         DB::transaction(function() use($id){
+    //             $divisi=Divisiperacara::where('acara_id', $id)->first();
+    //             $divisi->delete();
+    //             $jadwal=Jadwal::where('acara_id',$id)->first();
+    //             $jadwal->delete();
+    //             $acara->delete();
+    //         });
+    //     }
+    //     return ['status'=>'ok'];
+    // }
     public function view($id){
         $acara=Acara::with('jadwal.divisiperacara.divisi')->where('id',$id)->first();
         // dd($acara->jadwal);
         $list_jadwal = DB::table('jadwals')
-            ->select('jadwals.tgl_wawan','jadwals.id','jadwals.acara_id', 'jadwals.jam_wawan', 'jadwals.tmpt_wawan', 'jadwals.pewawancara','jadwals.status','users.nama','users.id as user_id','users.tahun','divisis.nama AS divisi')
+            ->select('jadwals.tgl_wawan','jadwals.id','jadwals.acara_id', 'jadwals.jam_wawan', 'jadwals.tmpt_wawan', 'jadwals.pewawancara','jadwals.status','users.nama','users.id as user_id','users.tahun', 'users.ipk','divisis.nama AS divisi')
             ->leftjoin('users', 'jadwals.user_id', '=', 'users.id')
             ->leftjoin('divisiperacaras', 'jadwals.divisi_id', '=', 'divisiperacaras.id')
             ->leftjoin('divisis', 'divisiperacaras.divisi_id', '=', 'divisis.id')
@@ -200,9 +204,12 @@ class AcaraPengurusController extends Controller
             ->orderBy('users.tahun')
             ->get();
         // dd($list_jadwal);
+        // $rating=Jadwal::whereHas('user')->with('user')->where('acara_id',$id)->get();
         $list_kategori= Kategori::all();
         $list_divisi= Divisi::all();
         return view('acara-pengurus.view')
+            // ->with('rating',$rating)
+            ->with('tahun', (int) Carbon::now()->format('Y'))
             ->with('acara',$acara)
             ->with('module',$this->module)
             ->with('list_kategori',$list_kategori)
@@ -218,8 +225,21 @@ class AcaraPengurusController extends Controller
     {
         
         $jadwal=Jadwal::where('id',$id)->first();
-        $jadwal->status=1;
-        $jadwal->save();
+        $divisiperacara=Divisiperacara::where('id', $jadwal->divisi_id)->first();
+        $divisi = '';
+        if($divisiperacara->kuota>0){
+
+            DB::transaction(function () {
+                $jadwal->status=1;
+                $jadwal->save();
+                $divisiperacara->kuota-=1;
+                $divisiperacara->save(); 
+            });      
+        }
+        else{
+            Session::flash('errorMsg','Kuota untuk menerima mahasiswa untuk divisi '.$divisiperacara->divisi->nama.' sudah habis');
+        }
+          
         return redirect()->route('acara-pengurus.view', ['id' => $acara]);
     }
     public function tolak($acara, $id)

@@ -53,6 +53,12 @@
                           </div>
                         </div>
                         <div class="form-group">
+                          <label class="col-lg-2 control-label">Tanggal Batas Pendaftaran </label>
+                          <div class="col-lg-10">
+                            <input required id="tgl_batas_ubah" min="{{ date('Y-m-d') }}" class="form-control" type="date" name="tgl_batas_ubah" value="{{ isset($acara)? $acara->tgl_batas_ubah : '' }}">
+                          </div>
+                        </div>
+                        <div class="form-group">
                           <label class="col-lg-2 control-label">Tempat Acara</label>
                           <div class="col-lg-10">
                             <input required class="form-control" type="text" name="tempat_acara"  value="{{ isset($acara)? $acara->tmpt_acara : '' }}">

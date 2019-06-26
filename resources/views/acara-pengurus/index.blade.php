@@ -39,7 +39,8 @@
                             <tr>
                                 <th>#</th>
                                 <th>Nama Acara</th>
-                                <th>Edit/Delete</th>
+                                <th>Status Acara</th>
+                                <th>Edit</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -47,10 +48,11 @@
                             <tr>
                                 <td> {{$key + 1}}</td>
                                 <td> <a href="{{ route('acara-pengurus.view', ['id' => $acara->id ])}}">{{$acara->nama}} </a></td>
+                                <td> {{ $acara->tgl_mulai_acara > $today? 'Yang akan datang' : ( $acara->tgl_mulai_acara <= $today && $today <= $acara->tgl_selesai_acara? 'Berlangsung' : ( $today > $acara->tgl_selesai_acara? 'Berakhir' : '') ) }} </td>
                                 <td>
                                     @if($acara->status==0)
                                     <a href="{{ route('acara-pengurus.edit-page', ["id" => $acara->id]) }}"><button class='btn btn-warning'>Edit</button></a>
-                                    <button class='btn btn-danger delete-button' data-id="{{$acara->id}}">Delete</button>
+                                    {{-- <button class='btn btn-danger delete-button' data-id="{{$acara->id}}">Delete</button> --}}
                                     @endif
                                 </td>
                             </tr>

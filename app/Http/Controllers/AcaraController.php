@@ -62,7 +62,7 @@ class AcaraController extends Controller
 
     public function diikuti()
     {
-        
+        $today=Carbon::today();
         $list_acara= Acara::with(['jadwal' => function($q){
             $q->where('user_id', Auth::user()->id);
         }])->whereHas('jadwal', function($q){
@@ -70,7 +70,7 @@ class AcaraController extends Controller
         })->get();
         // $list_acara= Acara::where('status', 1)->with('jadwal')->get();
         
-        return view('acara-diikuti.index')->with('list_acara',$list_acara)->with('module',$this->moduleacaradiikuti);
+        return view('acara-diikuti.index')->with('today',$today)->with('list_acara',$list_acara)->with('module',$this->moduleacaradiikuti);
     }
     /**
      * Store a newly created resource in storage.
@@ -102,9 +102,9 @@ class AcaraController extends Controller
             $jadwal->user_id=Auth::user()->id;
             $jadwal->divisi_id = $request->input('divisi_id');
             $jadwal->save();
-            $divisiperacara=Divisiperacara::where('id', $request->input('divisi_id'))->first();
-            $divisiperacara->kuota-=1;
-            $divisiperacara->save();   
+            // $divisiperacara=Divisiperacara::where('id', $request->input('divisi_id'))->first();
+            // $divisiperacara->kuota-=1;
+            // $divisiperacara->save();   
         });
         
         return redirect()->route('acara.index');

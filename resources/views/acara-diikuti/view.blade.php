@@ -43,6 +43,12 @@
                           </div>
                         </div>
                         <div class="form-group">
+                          <label class="col-lg-2 control-label">Tanggal Batas Pendaftaran:</label>
+                          <div class="col-lg-10">
+                            <p class="form-control-static" >{{$acara->tgl_batas_ubah}}</p>
+                          </div>
+                        </div>
+                        <div class="form-group">
                           <label class="col-lg-2 control-label">Tempat Acara:</label>
                           <div class="col-lg-10">
                             <p class="form-control-static" >{{$acara->tmpt_acara }}</p>
@@ -77,7 +83,7 @@
                                     <th>Jam</th>
                                     <th>Tempat</th>
                                     <th>Pewawancara</th>
-                                    
+                                    <th>Divisi</th>
                                 </tr>
                             </thead>
                             <tbody id="tbody-jadwal">
@@ -86,6 +92,7 @@
                                 <td><p class="form-control-static">{{ $acara->jadwal[0]->jam_wawan }}</p></td>
                                 <td><p class="form-control-static">{{ $acara->jadwal[0]->tmpt_wawan }}</p></td>
                                 <td><p class="form-control-static">{{ $acara->jadwal[0]->pewawancara }}</p></td>
+                                <td><p class="form-control-static">{{ $acara->jadwal[0]->divisiperacara->divisi->nama }}</p></td>
                               </tr>
                             </tbody>
                         </table>

@@ -18,6 +18,7 @@ class CreateAcarasTable extends Migration
             $table->string('nama',50)->unique()->nullable();
             $table->date('tgl_mulai_acara')->nullable();
             $table->date('tgl_selesai_acara')->nullable();
+            $table->date('tgl_batas_ubah')->nullable();
             $table->text('tmpt_acara')->nullable();
             $table->text('keterangan')->nullable();
             $table->decimal('ipkmin',8,2)->nullable();

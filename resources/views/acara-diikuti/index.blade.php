@@ -24,6 +24,7 @@
                                 <th>#</th>
                                 <th>Nama Acara</th>
                                 <th>Status</th>
+                                <th>Edit / Batal</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -32,7 +33,14 @@
                                 <td> {{$key + 1}}</td>
                                 <td> <a href="{{ route('acara-diikuti.view', ["id" => $acara->id]) }}">{{$acara->nama}} </a></td>
                                 <td> <span class="label {{ $acara->jadwal[0]->status == 0?  'label-warning' : ($acara->jadwal[0]->status == 1? 'label-success' : 'label-danger') }}">{{ $acara->jadwal[0]->status == 0?  'Belum Diterima / Dtolak' : ($acara->jadwal[0]->status == 1? 'Diterima' : ' Ditolak' ) }}</span> </td>
-                                
+                                @if($today < $acara->tgl_batas_ubah)
+                                <td>
+                                  <button class='btn btn-warning'>Edit</button>
+                                  <button class='btn btn-danger'>Batal</button>
+                                </td>
+                                @else
+                                <td></td>
+                                @endif
                               </tr>
                             @endforeach
                         </tbody>
@@ -47,7 +55,9 @@
           <!-- /.row -->
         </section>
         <!-- /.content -->
+
 @endsection
+
 
 @push('scripts')
 

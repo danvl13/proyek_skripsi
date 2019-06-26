@@ -51,6 +51,12 @@
                           </div>
                         </div>
                         <div class="form-group">
+                          <label class="col-lg-2 control-label">Tanggal Batas Pendaftaran:</label>
+                          <div class="col-lg-10">
+                            <p class="form-control-static" >{{$acara->tgl_batas_ubah}}</p>
+                          </div>
+                        </div>
+                        <div class="form-group">
                           <label class="col-lg-2 control-label">Tempat Acara:</label>
                           <div class="col-lg-10">
                             <p class="form-control-static" >{{$acara->tmpt_acara }}</p>
