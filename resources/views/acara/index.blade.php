@@ -23,6 +23,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>Nama Acara</th>
+                                <th>Status Acara</th>
                                 @if(Auth::user()->status == 3)
                                 <th>Status</th>
                                 <th>Approve</th>
@@ -34,6 +35,7 @@
                             <tr>
                                 <td> {{$key + 1}}</td>
                                 <td> <a href="{{ route('acara.view', ["id" => $acara->id]) }}">{{$acara->nama}} </a></td>
+                                <td> {{ $acara->tgl_mulai_acara > $today? 'Yang akan datang' : ( $acara->tgl_mulai_acara <= $today && $today <= $acara->tgl_selesai_acara? 'Berlangsung' : ( $today > $acara->tgl_selesai_acara? 'Berakhir' : '') ) }} </td>
                                 @if(Auth::user()->status == 3)
                                 <td> <span class="label {{ $acara->status == 1? 'label-success' : 'label-warning' }}">{{ $acara->status == 1? 'Approved' : ($acara->tgl_mulai_acara < $today? 'Expired' :'Waiting for Approval') }}</span> </td>
                                 @if($acara->status==0 && $acara->tgl_mulai_acara > $today)

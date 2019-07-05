@@ -111,7 +111,8 @@
                                     <th>Pewawancara</th>
                                     <th>Pendaftar</th>
                                     <th>Rating</th>
-                                    <th>Divisi Pendaftar</th>
+                                    <th>Divisi1 Pendaftar</th>
+                                    <th>Divisi2 Pendaftar</th>
                                     <th>Diterima/ Ditolak</th>
                                 </tr>
                             </thead>
@@ -125,20 +126,17 @@
                                 <td><p class="form-control-static">{{ $jadwal->pewawancara }}</p></td>
                                 @if($jadwal->nama)
                                 <td><a href="{{route('mahasiswa.view', ['id'=>$jadwal->user_id])}}"><p class="form-control-static">{{ $jadwal->nama? $jadwal->nama : '' }}</p></a></td>
-                              <td><p class="form-control-static">{{ (($jadwal->ipk/4*0.4) + (($tahun - $jadwal->tahun)/6*0.6)) *100 }}</p></td>
+                                <td><p class="form-control-static">{{ (($jadwal->ipk/4*0.4) + (($tahun - $jadwal->tahun)/6*0.6)) *100 }}</p></td>
                                 @else
                                 <td></td>
                                 <td></td>
                                 @endif
-                                <td><p class="form-control-static">{{ $jadwal->divisi? $jadwal->divisi : '' }}</p></td>
+                                <td><p class="form-control-static">{!! $jadwal->divisi_id1? ($jadwal->divisi_diterima == $jadwal->divisi_id1? '<span class="label label-primary">'.$jadwal->divisi_nama1.'</span>' : $jadwal->divisi_nama1) : '' !!}</p></td>
+                                <td><p class="form-control-static">{!! $jadwal->divisi_id2? ($jadwal->divisi_diterima == $jadwal->divisi_id2? '<span class="label label-primary">'.$jadwal->divisi_nama2.'</span>' : $jadwal->divisi_nama2) : '' !!}</p></td>
                                 <td>
                                   @if($jadwal->nama && $jadwal->status == 0)
-                                  <a href="{{ route('acara-pengurus.terima', ['acara' => $jadwal->acara_id,'id' => $jadwal->id]) }}">
-                                    <button type="button" class='btn btn-success' >Terima</button>
-                                    
-                                  </a>
+                                  <button id="terima-button" type="button" class='btn btn-success' data-toggle="modal" data-target="#myModal" data-jadwal="{{ $jadwal->id }}" data-divisi-id-1="{{$jadwal->divisi_id1}}" data-divisi-id-2="{{$jadwal->divisi_id2}}" data-divisi-nama-1="{{$jadwal->divisi_nama1}}" data-divisi-nama-2="{{$jadwal->divisi_nama2}}">Terima</button>
                                   <a href="{{ route('acara-pengurus.tolak', ['acara' => $acara->id,'id' => $jadwal->id]) }}">
-                                    
                                     <button type="button" class='btn btn-danger' >Tolak</button>
                                   </a>
                                   @elseif($jadwal->nama && $jadwal->status == 1)
@@ -177,12 +175,59 @@
           <!-- /.row -->
         </section>
         <!-- /.content -->
+
+        <!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <form method="post" action="{{route ('acara-pengurus.terima')}}">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Form Penerimaan</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="col-lg-2 control-label">Pilih Divisi</label>
+            <div class="col-lg-10">
+              <select id= "select-divisi" name="id" class="form-control"></select>
+            </div>
+          </div>
+          <br><br>
+        </div>
+        <div class="modal-footer">
+          <input id="jadwal-id-modal" type ="hidden" name="jadwal" value="">
+          <input type ="hidden" name="acara" value="{{$jadwal->acara_id}}">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-success" >Terima</button>
+        </div>
+        @csrf
+      </form>
+    </div>
+
+  </div>
+</div>
 @endsection
 
 @push('scripts')
 <script>
-$('form').submit(function(e){
-  e.preventDefault();
-})
+function generateOptions(){
+  id1 = $(this).data('divisi-id-1')
+  id2 = $(this).data('divisi-id-2')
+  nama1= $(this).data('divisi-nama-1')
+  nama2= $(this).data('divisi-nama-2')
+  jadwal= $(this).data('jadwal')
+  $('#select-divisi').html('')
+  $('#select-divisi').append(`
+    <option value='${id1}'>${nama1}</option>
+    <option value='${id2}'>${nama2}</option>
+  `)
+  $('#jadwal-id-modal').val(jadwal)
+}
+
+$(document).ready(function(){
+  $('#tbody-jadwal').on('click','#terima-button', generateOptions)
+});
 </script>
 @endpush

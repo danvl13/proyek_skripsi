@@ -50,7 +50,7 @@
                                 <td> <a href="{{ route('acara-pengurus.view', ['id' => $acara->id ])}}">{{$acara->nama}} </a></td>
                                 <td> {{ $acara->tgl_mulai_acara > $today? 'Yang akan datang' : ( $acara->tgl_mulai_acara <= $today && $today <= $acara->tgl_selesai_acara? 'Berlangsung' : ( $today > $acara->tgl_selesai_acara? 'Berakhir' : '') ) }} </td>
                                 <td>
-                                    @if($acara->status==0)
+                                    @if($today<$acara->tgl_mulai_acara)
                                     <a href="{{ route('acara-pengurus.edit-page', ["id" => $acara->id]) }}"><button class='btn btn-warning'>Edit</button></a>
                                     {{-- <button class='btn btn-danger delete-button' data-id="{{$acara->id}}">Delete</button> --}}
                                     @endif

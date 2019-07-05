@@ -46,7 +46,7 @@ Route::post('/acara-pengurus/update','AcaraPengurusController@update')->name('ac
 Route::post('/acara-pengurus/delete','AcaraPengurusController@delete')->name('acara-pengurus.delete');
 Route::get('/acara-pengurus/view/{id}','AcaraPengurusController@view')->name('acara-pengurus.view');
 Route::get('/acara-pengurus/hasil/{id}','AcaraPengurusController@hasil')->name('acara-pengurus.hasil');
-Route::get('/acara-pengurus/{acara}/terima/{id}','AcaraPengurusController@terima')->name('acara-pengurus.terima');
+Route::post('/acara-pengurus/terima','AcaraPengurusController@terima')->name('acara-pengurus.terima');
 Route::get('/acara-pengurus/{acara}/tolak/{id}','AcaraPengurusController@tolak')->name('acara-pengurus.tolak');
 
 //divisi

@@ -94,7 +94,8 @@
                                 <tr>
                                     
                                     <th>Divisi</th>
-                                    <th>Kuota</th>
+                                    <th>Kuota Pendaftar</th>
+                                    <th>Kuota Penerimaan</th>
                                     <th>Delete</th>
                                 </tr>
                             </thead>
@@ -109,7 +110,8 @@
                                     @endforeach
                                   </select>
                                 </td>
-                                <td> <input class="form-control" type="number" name="kuota[]" value="{{ $divisiperacara->kuota }}" required></td>
+                                <td> <input class="form-control" type="number" name="kuotapendaftar[]" value="{{ $divisiperacara->kuotapendaftar }}" required></td>
+                                <td> <input class="form-control" type="number" name="kuotapenerimaan[]" value="{{ $divisiperacara->kuotapenerimaan }}" required></td>
                                 <td>
                                     <input type="hidden" name="id_divisiperacara[]" value="{{ $divisiperacara->id }}">
                                     <button type="button" class="btn btn-danger hapus-button"><i class="fa fa-trash"></i></button>
@@ -125,7 +127,8 @@
                                       @endforeach
                                     </select>
                                   </td>
-                                  <td> <input class="form-control" type="number" name="kuota[]" required></td>
+                                  <td> <input class="form-control" type="number" name="kuotapendaftar[]" required></td>
+                                  <td> <input class="form-control" type="number" name="kuotapenerimaan[]" required></td>
                                   <td>
                                       <button type="button" class="btn btn-danger hapus-button"><i class="fa fa-trash"></i></button>
                                   </td>
@@ -221,7 +224,8 @@ function tambah_divisi(){
   html +=`
         </select>
       </td>
-      <td> <input class="form-control" type="number" name="kuota[]" required></td>
+      <td> <input class="form-control" type="number" name="kuotapendaftar[]" required></td>
+      <td> <input class="form-control" type="number" name="kuotapenerimaan[]" required></td>
       <td>
           <input type="hidden" name="id_divisiperacara[]">
           <button type="button" class="btn btn-danger hapus-button"><i class="fa fa-trash"></i></button>

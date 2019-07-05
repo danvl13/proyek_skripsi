@@ -17,7 +17,14 @@ class Jadwal extends Model
     }
     public function divisiperacara()
     {
-        return $this->belongsTo('App\Divisiperacara', 'divisi_id');
+        return $this->belongsTo('App\Divisiperacara', 'divisi_diterima');
     }
-    
+    public function divisipilihan1()
+    {
+        return $this->belongsTo('App\Divisiperacara', 'divisi_id1');
+    }
+    public function divisipilihan2()
+    {
+        return $this->belongsTo('App\Divisiperacara', 'divisi_id2');
+    }
 }

@@ -180,33 +180,49 @@
             <h4 class="modal-title">Form Mendaftar</h4>
           </div>
           <div class="modal-body">
-                <div class="form-group">
-                    <label class="col-lg-2 control-label">Pilih Divisi</label>
-                    <div class="col-lg-10">
-                      <?php $max = 0; ?>
-                      <select name="divisi_id" class="form-control">
-                        @foreach($sort as $key => $s)
-                        <?php 
-                        if($key == 0){
-                          $max = $s['count'];
-                        }
-                        ?>
-                        <option value="{{ $s['divisi']->id }}">{{ ($key == 0 || $s['count'] == $max) && $s['count'] != 0? '*' : '' }} {{ $s['divisi']->divisi->nama }}</option>
-                        @endforeach
-                      </select>
-                    </div>
-                  </div>
-                  <br><br>
-                  <div class="form-group">
-                      <label class="col-lg-2 control-label">Pilih Jadwal Wawancara</label>
-                      <div class="col-lg-10">
-                        <select name="jadwal_id" class="form-control">
-                          @foreach($list_jadwal as $key => $jadwal)
-                          <option value="{{ $jadwal->id }}" >{{ $jadwal->tgl_wawan.' | '. $jadwal->jam_wawan.' | '.$jadwal->tmpt_wawan.' | '. $jadwal->pewawancara }}</option>
-                          @endforeach
-                        </select>
-                      </div>
-                    </div>
+            <div class="form-group">
+              <label class="col-lg-2 control-label">Pilih Divisi ke 1</label>
+              <div class="col-lg-10">
+                <?php $max = 0; ?>
+                <select name="divisi_id1" class="form-control">
+                  @foreach($sort as $key => $s)
+                  <?php 
+                  if($key == 0){
+                    $max = $s['count'];
+                  }
+                  ?>
+                  <option value="{{ $s['divisi']->id }}">{{ ($key == 0 || $s['count'] == $max) && $s['count'] != 0? '*' : '' }} {{ $s['divisi']->divisi->nama }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Pilih Divisi ke 2</label>
+                <div class="col-lg-10">
+                  <?php $max = 0; ?>
+                  <select name="divisi_id2" class="form-control">
+                    @foreach($sort as $key => $s)
+                    <?php 
+                    if($key == 0){
+                      $max = $s['count'];
+                    }
+                    ?>
+                    <option value="{{ $s['divisi']->id }}">{{ ($key == 0 || $s['count'] == $max) && $s['count'] != 0? '*' : '' }} {{ $s['divisi']->divisi->nama }}</option>
+                    @endforeach
+                  </select>
+                </div>
+              </div>
+            <br><br>
+            <div class="form-group">
+              <label class="col-lg-2 control-label">Pilih Jadwal Wawancara</label>
+              <div class="col-lg-10">
+                <select name="jadwal_id" class="form-control">
+                  @foreach($list_jadwal as $key => $jadwal)
+                  <option value="{{ $jadwal->id }}" >{{ $jadwal->tgl_wawan.' | '. $jadwal->jam_wawan.' | '.$jadwal->tmpt_wawan.' | '. $jadwal->pewawancara }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
           </div>
           <div class="modal-footer">
             <input type ="hidden" name="id" value="{{$acara->id}}">

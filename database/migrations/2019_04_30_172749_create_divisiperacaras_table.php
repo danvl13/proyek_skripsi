@@ -15,7 +15,8 @@ class CreateDivisiperacarasTable extends Migration
     {
         Schema::create('divisiperacaras', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('kuota')->nullable();
+            $table->integer('kuotapendaftar')->nullable();
+            $table->integer('kuotapenerimaan')->nullable();
             $table->integer('acara_id')->unsigned();
             // $table->foreign('acara_id')->references('id')->on('acaras');
             $table->integer('divisi_id')->unsigned();

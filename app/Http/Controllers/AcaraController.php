@@ -26,6 +26,7 @@ class AcaraController extends Controller
      */
     public function index()
     {
+        $today=Carbon::today();
         if(Auth::user()->status==3){
             $list_acara= Acara::get();
         }else{
@@ -38,9 +39,11 @@ class AcaraController extends Controller
             })->where('ipkmin','<=',Auth::user()->ipk)
             ->whereHas('jadwal', function($q){
                 $q->where('user_id',null);
-            })->whereHas('divisiperacara', function($q){
-                $q->where('kuota', '>', 0);
-            })->get();
+            })
+            ->whereHas('divisiperacara', function($q){
+                $q->where('kuotapendaftar', '>', 0);
+            })
+            ->get();
         }
         return view('acara.index')
             ->with('list_acara',$list_acara)
@@ -100,7 +103,8 @@ class AcaraController extends Controller
         DB::transaction(function () use($request){
             $jadwal=Jadwal::where('id', $request->input('jadwal_id'))->first();
             $jadwal->user_id=Auth::user()->id;
-            $jadwal->divisi_id = $request->input('divisi_id');
+            $jadwal->divisi_id1 = $request->input('divisi_id1');
+            $jadwal->divisi_id2 = $request->input('divisi_id2');
             $jadwal->save();
             // $divisiperacara=Divisiperacara::where('id', $request->input('divisi_id'))->first();
             // $divisiperacara->kuota-=1;
@@ -161,7 +165,7 @@ class AcaraController extends Controller
 
     public function view($id){
         $acara=Acara::where('id',$id)->first();
-        $list_divisi= Divisiperacara::where('acara_id',$id)->where('kuota', '>',0)->get();
+        $list_divisi= Divisiperacara::where('acara_id',$id)->where('kuotapendaftar', '>',0)->get();
         $list_jadwal= Jadwal::where('acara_id',$id)
             ->where('tgl_wawan','>',Carbon::today())
             ->where('user_id',null)

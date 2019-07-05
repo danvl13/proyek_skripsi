@@ -23,7 +23,8 @@
                             <tr>
                                 <th>#</th>
                                 <th>Nama Acara</th>
-                                <th>Status</th>
+                                <th>Status Acara</th>
+                                <th>Status Mahasiswa</th>
                                 <th>Edit / Batal</th>
                             </tr>
                         </thead>
@@ -32,6 +33,7 @@
                             <tr>
                                 <td> {{$key + 1}}</td>
                                 <td> <a href="{{ route('acara-diikuti.view', ["id" => $acara->id]) }}">{{$acara->nama}} </a></td>
+                                <td> {{ $acara->tgl_mulai_acara > $today? 'Yang akan datang' : ( $acara->tgl_mulai_acara <= $today && $today <= $acara->tgl_selesai_acara? 'Berlangsung' : ( $today > $acara->tgl_selesai_acara? 'Berakhir' : '') ) }} </td>
                                 <td> <span class="label {{ $acara->jadwal[0]->status == 0?  'label-warning' : ($acara->jadwal[0]->status == 1? 'label-success' : 'label-danger') }}">{{ $acara->jadwal[0]->status == 0?  'Belum Diterima / Dtolak' : ($acara->jadwal[0]->status == 1? 'Diterima' : ' Ditolak' ) }}</span> </td>
                                 @if($today < $acara->tgl_batas_ubah)
                                 <td>

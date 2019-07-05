@@ -42,7 +42,6 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Pendaftar</th>
-                                    <th>Divisi Pendaftar</th>
                                 </tr>
                             </thead>
                             <tbody id="tbody-jadwal">
@@ -51,7 +50,6 @@
                               <tr>
                                   <td> {{ $key +  1 }} </td>
                                 <td><a href="{{route('mahasiswa.view', ['id'=>$tolak->user_id])}}"><p class="form-control-static">{{ $tolak->user->nama  }}</p></a></td>
-                                <td><p class="form-control-static">{{ $tolak->divisiperacara->divisi->nama }}</p></td>
                               </tr>
                               @endforeach
                             </tbody>

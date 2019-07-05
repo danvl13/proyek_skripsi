@@ -22,7 +22,9 @@ class CreateJadwalsTable extends Migration
             $table->integer('status')->default(0);
             $table->boolean('tgl_wawan_terbesar')->default(0);
             $table->integer('user_id')->nullable()->unsigned();
-            $table->integer('divisi_id')->nullable()->unsigned();
+            $table->integer('divisi_id1')->nullable()->unsigned();
+            $table->integer('divisi_id2')->nullable()->unsigned();
+            $table->integer('divisi_diterima')->nullable()->unsigned();
             $table->integer('acara_id')->unsigned();
             $table->timestamps();
         });

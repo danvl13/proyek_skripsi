@@ -55,9 +55,10 @@ class AcaraPengurusController extends Controller
             $acara->kategori_id=$request->input('kategori_id');
             $acara->save();
 
-            foreach($request->input('kuota') as $key => $divisiperacara){
+            foreach($request->input('kuotapendaftar') as $key => $divisiperacara){
                 $divisiperacara= new Divisiperacara;
-                $divisiperacara->kuota=$request->input('kuota')[$key];
+                $divisiperacara->kuotapendaftar=$request->input('kuotapendaftar')[$key];
+                $divisiperacara->kuotapenerimaan=$request->input('kuotapenerimaan')[$key];
                 $divisiperacara->acara_id =$acara->id;
                 $divisiperacara->divisi_id=$request->input('divisi_id')[$key];
                 $divisiperacara->save();
@@ -110,19 +111,26 @@ class AcaraPengurusController extends Controller
             $divPerAcara = $request->input('id_divisiperacara');
             // dd($divPerAcara);
             foreach($divPerAcara as $key => $div){
-                $newDivisi[]=Divisiperacara::updateOrcreate(
+                dump((int)$divPerAcara[$key]);
+                dump($acara->id);
+                dump((int)$request->input('kuotapendaftar')[$key]);
+                $newDivisi=Divisiperacara::updateOrCreate(
                     [
-                        'id'=> $divPerAcara[$key],
+                        'id'=> (int) $divPerAcara[$key],
                         'acara_id'=> $acara->id
                     ],
                     [
-                        'kuota'=> $request->input('kuota')[$key],
-                        'divisi_id'=> $request->input('divisi_id')[$key]
+                        'kuotapendaftar'=> (int)$request->input('kuotapendaftar')[$key],
+                        'kuotapenerimaan'=> (int)$request->input('kuotapenerimaan')[$key],
+                        'divisi_id'=> (int)$request->input('divisi_id')[$key]
                     ]
                 );
+                dump($newDivisi);
             }
-           
+            die();
             $newDivisi = collect($newDivisi);
+            dump($newDivisi);
+            // die();
             $list_divisi = Divisiperacara::where('acara_id', $acara->id)->get();
             foreach($list_divisi as $divisi){
                 // dd($divisi->id);
@@ -135,7 +143,7 @@ class AcaraPengurusController extends Controller
             foreach((array)$request->input('tgl_wawan') as $key => $jadwal){
                 // var_dump($request->input('tgl_wawan_terbesar')[$key]);
                 // die();
-                $newJadwal[] = Jadwal::updateOrcreate(
+                $newJadwal[] = Jadwal::updateOrCreate(
                     ['id'=> $request->input('id_jadwal')[$key] ],
                     [
                         'tgl_wawan'=> $request->input('tgl_wawan')[$key],
@@ -196,10 +204,12 @@ class AcaraPengurusController extends Controller
         $acara=Acara::with('jadwal.divisiperacara.divisi')->where('id',$id)->first();
         // dd($acara->jadwal);
         $list_jadwal = DB::table('jadwals')
-            ->select('jadwals.tgl_wawan','jadwals.id','jadwals.acara_id', 'jadwals.jam_wawan', 'jadwals.tmpt_wawan', 'jadwals.pewawancara','jadwals.status','users.nama','users.id as user_id','users.tahun', 'users.ipk','divisis.nama AS divisi')
+            ->select('jadwals.tgl_wawan','jadwals.id','jadwals.acara_id', 'jadwals.jam_wawan', 'jadwals.tmpt_wawan', 'jadwals.pewawancara','jadwals.status','users.nama','users.id as user_id','users.tahun', 'users.ipk','divisis1.id AS divisi_id1','divisis2.id AS divisi_id2','divisis1.nama AS divisi_nama1','divisis2.nama AS divisi_nama2','jadwals.divisi_diterima')
             ->leftjoin('users', 'jadwals.user_id', '=', 'users.id')
-            ->leftjoin('divisiperacaras', 'jadwals.divisi_id', '=', 'divisiperacaras.id')
-            ->leftjoin('divisis', 'divisiperacaras.divisi_id', '=', 'divisis.id')
+            ->leftjoin('divisiperacaras as divisiperacaras1', 'jadwals.divisi_id1', '=', 'divisiperacaras1.id')
+            ->leftjoin('divisis as divisis1', 'divisiperacaras1.divisi_id', '=', 'divisis1.id')
+            ->leftjoin('divisiperacaras as divisiperacaras2', 'jadwals.divisi_id2', '=', 'divisiperacaras2.id')
+            ->leftjoin('divisis as divisis2', 'divisiperacaras2.divisi_id', '=', 'divisis2.id')
             ->where('jadwals.acara_id', $id)
             ->orderBy('users.tahun')
             ->get();
@@ -221,18 +231,18 @@ class AcaraPengurusController extends Controller
         $list_tolak=Jadwal::where('acara_id',$id)->where('status',2)->get();
         return view('acara-pengurus.hasil')->with('list_terima',$list_terima)->with('module',$this->module)->with('list_tolak',$list_tolak);
     }
-    public function terima($acara, $id)
+    public function terima(Request $request)
     {
-        
-        $jadwal=Jadwal::where('id',$id)->first();
-        $divisiperacara=Divisiperacara::where('id', $jadwal->divisi_id)->first();
+        $jadwal=Jadwal::where('id', $request->input('jadwal'))->first();
+        $divisiperacara=Divisiperacara::where('id', $request->input('id'))->first();
         $divisi = '';
-        if($divisiperacara->kuota>0){
+        if($divisiperacara->kuotapenerimaan>0){
 
-            DB::transaction(function () {
+            DB::transaction(function () use($jadwal, $request, $divisiperacara){
                 $jadwal->status=1;
+                $jadwal->divisi_diterima= $request->input('id');
                 $jadwal->save();
-                $divisiperacara->kuota-=1;
+                $divisiperacara->kuotapenerimaan-=1;
                 $divisiperacara->save(); 
             });      
         }
@@ -240,7 +250,7 @@ class AcaraPengurusController extends Controller
             Session::flash('errorMsg','Kuota untuk menerima mahasiswa untuk divisi '.$divisiperacara->divisi->nama.' sudah habis');
         }
           
-        return redirect()->route('acara-pengurus.view', ['id' => $acara]);
+        return redirect()->route('acara-pengurus.view', ['id' => $request->input('acara')]);
     }
     public function tolak($acara, $id)
     {
